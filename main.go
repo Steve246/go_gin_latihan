@@ -30,7 +30,8 @@ func main() {
 	// }
 
 	//GET Category
-	// router.GET("/product/GetCategory", GetCategory)
+	router.GET("/product/GetCategory", Retreive)
+	// http://localhost:8080/product/GetCategory
 
 	err := router.Run()
 
@@ -43,6 +44,27 @@ func main() {
 // func GetCategory(c *gin.Context) {
 
 // }
+
+func Retreive(c *gin.Context) {
+	// var newCategory *model.Category
+
+	categoryRepo := repository.NewCategoryRepository()
+
+	products, err := categoryRepo.Retrieve()
+
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"status":  "FAILED",
+			"message": "Error when creating Product",
+		})
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "list of products",
+		"data":    products,
+	})
+
+}
 
 func PostCategory(c *gin.Context) {
 	var newCategory *model.Category
