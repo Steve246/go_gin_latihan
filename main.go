@@ -33,6 +33,9 @@ func main() {
 	router.GET("/product/GetCategory", Retreive)
 	// http://localhost:8080/product/GetCategory
 
+
+	//POST Produk
+
 	err := router.Run()
 
 	if err != nil {
@@ -47,10 +50,12 @@ func main() {
 
 func Retreive(c *gin.Context) {
 	// var newCategory *model.Category
+	displayRepo := repository.NewCategoryRepository()
 
-	categoryRepo := repository.NewCategoryRepository()
+	ucDisplayAll := usecase.NewCreateDisplayCategory(displayRepo)
 
-	products, err := categoryRepo.Retrieve()
+	hasilDisplay, err := ucDisplayAll.DisplayAll()
+
 
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
@@ -61,7 +66,7 @@ func Retreive(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "list of products",
-		"data":    products,
+		"data":    hasilDisplay,
 	})
 
 }
